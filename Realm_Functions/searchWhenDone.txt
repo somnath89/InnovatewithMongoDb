@@ -1,0 +1,32 @@
+// This function is the endpoint's request handler.
+exports = function(payload, response) {
+   
+   const postbody = EJSON.parse(payload.body.text())
+   console.log("Payload--"+JSON.stringify(postbody));
+    
+    //{"address.coord":{$geoWithin: {$box: postbody.box}}},
+        
+   let term = {$and:[
+        {"address.coord":{$geoWithin: {$box: postbody.box}}},
+        {"grades.grade":{$in:postbody.grade}},
+        {"cuisine":{$in:postbody.cuisine}}
+      ]
+    };
+    
+
+    // Querying a mongodb service:
+    const collection = context.services.get("mongodb-atlas").db("sample_restaurants").collection("restaurants");
+    let restaurants = collection.find(term).toArray();
+    
+    //let resp = await collection.aggregate(pipeline);
+    console.log("Response --"+JSON.stringify(restaurants));
+    if(restaurants.length ==0){
+      return "Sorry unable to get results";
+    }
+    //this is to format from ejson to regular json response
+    response.setStatusCode(200);
+    response.setHeader("Content-Type", "application/json");
+    response.setBody(JSON.stringify(restaurants));
+    
+    return response;
+};

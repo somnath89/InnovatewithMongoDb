@@ -1,0 +1,21 @@
+exports = function(payload,response) {
+   
+    const postbody = EJSON.parse(payload.body.text())
+    console.log("Payload--"+JSON.stringify(postbody));
+    //let term = {"address.coord": {$geoWithin: {$box: [[-73.951215,40.682423],[-73.944005,40.658726]]}}};
+    
+    let term = {"address.coord": {$geoWithin: {$box: postbody.box}}};
+    // Querying a mongodb service:
+     const collection = context.services.get("mongodb-atlas").db("sample_restaurants").collection("restaurants");
+     let restaurants = collection.find(term).toArray();
+    console.log("Response --"+JSON.stringify(restaurants));
+    
+    if(restaurants.length ==0){
+      return "Sorry unable to get results";
+    }
+    response.setStatusCode(200);
+    response.setHeader("Content-Type", "application/json");
+    response.setBody(JSON.stringify(restaurants));
+    
+    return  response;
+};
