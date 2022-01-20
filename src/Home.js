@@ -126,7 +126,7 @@ function Home() {
                                      isLoading: true });
     axios
       .post(searchURL, {
-        borough: restaurant
+        name: restaurant
       })
       .then((response) => {
         //plotMarkers();

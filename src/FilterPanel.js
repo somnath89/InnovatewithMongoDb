@@ -41,7 +41,10 @@ function FilterPanel(props){
   const getChosenFilters=()=>{
 	console.log("done");
 	props.showFilters(false);
-	props.search(cuisineArr,ratingArr);
+  if(cuisineArr.length > 0 || ratingArr.length>0){
+      props.search(cuisineArr,ratingArr);
+  }
+	
   }
   const updateSelections=(sourceArr,ev)=>{
     if(ev.target.checked){

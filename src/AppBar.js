@@ -99,6 +99,7 @@ export function NavigationBar(props) {
   const [filters, setFilter] = React.useState(false);
   const [autocomplete, setAutocomplete] = React.useState([]);
 
+  const input = React.useRef();
   
   const keyPress=(e)=>{
     if(e.keyCode == 13){
@@ -142,7 +143,8 @@ export function NavigationBar(props) {
   const setSelection=(ev)=>{
     //console.log(ev.target.innerText);
     setSearchTerm(ev.target.innerText);
-    //alert("Hello");
+    setAutocomplete([]);
+    input.current.focus();
 
   }
 
@@ -158,6 +160,7 @@ export function NavigationBar(props) {
       <AppBar position="static " style={{backgroundColor:'transparent',position:'absolute',top:'7px',height:'0px'}}>
         <div className={classes.search}>
             <InputBase
+              inputRef={input}
               placeholder="Search Restaurants"
               classes={{
                 root: classes.inputRoot,
@@ -170,7 +173,7 @@ export function NavigationBar(props) {
             />
             {autocomplete.length>0?listAutocomplete():null}
 
-            <button style={{/*display:'none'*/}} className="cuisineBtn"
+            <button style={{display:'none'}} className="cuisineBtn"
                     onClick={()=>props.searchRestaurants(searchTerm)}>Search</button>
             
             <button className="cuisineBtn" onClick={()=>props.searchRestaurantsinBox()}>Open Now</button>
