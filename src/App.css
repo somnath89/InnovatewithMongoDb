@@ -1,0 +1,187 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+.cuisineBtnSelected{
+  background-color:black;
+  color:white;
+  border:1px solid #ccd6d6;
+  width:10em;
+  margin-right:5px;
+  border-radius:1.565rem;
+  height:37px;
+  font-size:13px;
+  font-weight:bold;
+}
+.cuisineBtn{
+  width:10em;
+  margin-right:5px;
+  background-color:white;
+  color:black;
+  border-radius:1.565rem;
+   height:37px;
+   font-size:13px;
+   font-weight:bold;
+   border:1px solid #ccd6d6;
+
+}
+.cuisineBtn:hover{
+  background-color:black;
+  color:white;
+  border:1px solid #ccd6d6;
+
+}
+.popupcard{
+    /*position: absolute;
+    bottom: 8%;
+    padding: 15px;
+    /*right: 30%;
+    z-index: 1000;
+    background: white;
+    border-radius: 4px;
+    height: 100px;
+    display: block;
+    width: 250px;*/
+
+    /*padding: 15px;
+    position: relative;*/
+    top: -10px; 
+    /* right: 30%; */
+    z-index: 1000;
+    background: white;
+    border-radius: 4px;
+    height: 66px;
+    display: block;
+    width: 250px;
+    font-size: 1rem;
+}
+.drivingDirections{
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    border: 2px solid #ccd6d6;
+    position: absolute;
+    top: 33px;
+    right: 13px;
+}
+.custom{
+    width:-5px;
+}
+.filterPanel{
+    top: 0px;
+    right: 0%;
+    z-index: 3000;
+    background: white;
+    border-radius: 4px;
+    height: 100vh;
+    width: 42em;
+    font-size: 1rem;
+    position: absolute;
+}
+.filterBtn{
+   width:14rem;
+   background-color:white;
+   color:black;
+   height:37px;
+   font-size:13px;
+   font-weight:bold;
+   border:1px solid #ccd6d6;
+
+}
+.filterBtn:hover{
+  background-color:black;
+  color:white;
+  border:1px solid #ccd6d6;
+
+}
+.filterBtnSelected{
+  background-color:black;
+  color:white;
+  border:1px solid #ccd6d6;
+  width:14rem;
+  height:37px;
+  font-size:13px;
+  font-weight:bold;
+}
+.footer{
+  position: absolute;
+  bottom: 8px;
+  text-align: center;
+  width: 100%;
+  border-top:1px solid #d6d6d7;
+}
+.footer .cuisineBtn{
+  margin-top: 10px;
+}
+
+.cuisine_container {
+  /*-webkit-column-count: 2; 
+  -moz-column-count: 2; 
+  column-count: 2;*/
+  max-height: 72vh;
+  overflow-y: auto;
+}
+.cuisine_container>ul{
+  column-count: 2;
+  margin: 0;
+}
+ul>li{
+  list-style-type: none;
+}
+.autocomplete_li{
+    list-style-type: none;
+    color: black;
+    border: 1px solid #d6d6d7;
+    width: 209px;
+    background-color: white;
+    padding: 3px;
+}
+.autocomplete_li:hover{
+  background-color:black;
+  color:white;
+  border:1px solid #ccd6d6;
+  cursor: pointer;
+
+}
+.autocomplete_ul{
+    position: absolute;
+    top: 32px;
+    left: 52px;
+}
+
+.stars{
+  width:30px;
+}
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
