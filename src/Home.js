@@ -10,6 +10,8 @@ import * as L from 'leaflet';
 import cogoToast from 'cogo-toast';
 import FilterPanel from './FilterPanel';
 
+import ratings from './ratingsConfig';
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -47,6 +49,30 @@ function Home() {
     window.open('http://maps.google.com/?q=37.421854,-122.084112');
   }
 
+  const calculateRating=(gradesArr)=>{
+    
+    const counts = {};
+    let grades = gradesArr.map(item=>item.grade);
+    grades.forEach(function (x) { counts[x] = (counts[x] || 0) + 1; });
+    
+    //console.log(counts)
+    
+    let highestKey = "Not Yet Graded"; //default ranking
+    if(JSON.stringify(counts) !== JSON.stringify({})){
+       highestKey = Object.keys(counts).reduce(function(a, b){ return counts[a] > counts[b] ? a : b });
+    
+    }
+    //let highestKey = Object.keys(counts).reduce(function(a, b){ return counts[a] > counts[b] ? a : b });
+    
+   // return ratings[highestKey];
+
+    let content = '';
+    for(var i=0;i<ratings[highestKey];i++){
+     content=content+'<img key='+Math.random()+' class="stars" src='+process.env.PUBLIC_URL+"/images/star.png"+'></img>';
+   }
+   return content;
+  }
+
   const plotRestaurants =(response)=>{
     let markersList = response;
 
@@ -75,7 +101,8 @@ function Home() {
      '<b>'+item.name+'</b>'+
      '<img class=drivingDirections src='+process.env.PUBLIC_URL+'/images/directions.png'+'></img>'+
      '<div>'+item.cuisine+' restaurant ('+item.borough+')</div>'+
-     '<div>Ratings - '+item.grades.length+'</div></div>'
+     '<div>'+calculateRating(item.grades)+'</div>'+
+     '</div>'
         
         /*var LPopup = '<div class=popupcard>'+
      '<b>'+item.name+'</b>'+
