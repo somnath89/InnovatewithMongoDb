@@ -6,7 +6,9 @@ Steps to set up code for local environment.
 **Frontend**
 
 check out code in local from github
+
 npm i
+
 npm start
 
 For build and deploy run '**npm run build**' and then upload 'build' directory contents to '**Hosting**' tab under atlas .
