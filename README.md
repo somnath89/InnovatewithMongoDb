@@ -22,6 +22,9 @@ For backend services code is available in "Realm Functions" directory. Each of t
 Change and deploy from atlas realm editor as needed.
 
 **Autocomplete API** -- https://ap-south-1.aws.data.mongodb-api.com/app/searchapp-qqtoi/endpoint/autocomplete
+
 **Search Open Restaurants API** -- https://ap-south-1.aws.data.mongodb-api.com/app/searchapp-qqtoi/endpoint/searchRestaurants
+
 **Search Map box area API** -- https://ap-south-1.aws.data.mongodb-api.com/app/searchapp-qqtoi/endpoint/searchInBox
+
 **Apply filter API** -- https://ap-south-1.aws.data.mongodb-api.com/app/searchapp-qqtoi/endpoint/searchWhenDone
