@@ -4,7 +4,7 @@ exports = function(payload, response) {
    // const {borough} = query;
    const postbody = EJSON.parse(payload.body.text())
     console.log("Payload--"+JSON.stringify(postbody));
-    let term = {"borough":{$eq:postbody.borough}};
+    let term = {"name":{$eq:postbody.name}};
     
 
     // Querying a mongodb service:
