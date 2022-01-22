@@ -42,6 +42,10 @@ function Home() {
       var popup = marker.bindPopup('<b>Hello world!</b><br />I am a newly popup.');
     })
   }
+  const showDirections=()=>{
+    alert('Hello');
+    window.open('http://maps.google.com/?q=37.421854,-122.084112');
+  }
 
   const plotRestaurants =(response)=>{
     let markersList = response;
@@ -66,15 +70,18 @@ function Home() {
         var marker = L.marker(item.address.coord.reverse(),{icon:restaurantIcon,meta:item}).on('click',function(e) {
         setSelectedRestaurant(e.target.options.meta);
       }).addTo(mcg);
-      //var popup = marker.bindPopup('<b>'+item.name+'</b><br/>'+item.cuisine+' restaurant ('+item.borough+' )<br/>Reviews - '+
-        //item.grades.length);
-        //var LPopup = L.popup().setContent(<PopupCard resto={restaurant}/>);
+      
        var LPopup = '<div class=popupcard>'+
      '<b>'+item.name+'</b>'+
      '<img class=drivingDirections src='+process.env.PUBLIC_URL+'/images/directions.png'+'></img>'+
      '<div>'+item.cuisine+' restaurant ('+item.borough+')</div>'+
      '<div>Ratings - '+item.grades.length+'</div></div>'
         
+        /*var LPopup = '<div class=popupcard>'+
+     '<b>'+item.name+'</b>'+
+     '<div>'+item.cuisine+' restaurant ('+item.borough+')</div>'+
+     '<div>Ratings - '+item.grades.length+'</div></div>'*/
+
         var customOptions ={
               'maxWidth': '300',
               'width': '200',

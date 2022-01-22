@@ -110,6 +110,10 @@ export function NavigationBar(props) {
          props.searchRestaurants(searchTerm);
       }
   }
+  const handleSearchGlassClick=()=>{
+    setAutocomplete([]);
+    props.searchRestaurants(searchTerm);
+  }
   const toggleFilterPanel=()=>{
     //setFilter(!filters);
     //props.showFilters(!filters);
@@ -144,7 +148,7 @@ export function NavigationBar(props) {
     //console.log(ev.target.innerText);
     setSearchTerm(ev.target.innerText);
     setAutocomplete([]);
-    input.current.focus();
+    //input.current.focus();
 
   }
 
@@ -160,7 +164,11 @@ export function NavigationBar(props) {
       <AppBar position="static " style={{backgroundColor:'transparent',position:'absolute',top:'7px',height:'0px'}}>
         <div className={classes.search}>
             <InputBase
-              inputRef={input}
+              inputRef={(input) => {
+                if(input != null) {
+                   input.focus();
+                }
+              }}
               placeholder="Search Restaurants"
               classes={{
                 root: classes.inputRoot,
@@ -171,6 +179,9 @@ export function NavigationBar(props) {
               onChange={(e)=>handleAutoComplete(e)}
               onKeyDown={(e)=>keyPress(e)}
             />
+            <img className="search_glass" src={process.env.PUBLIC_URL+'/images/search.png'}
+            onClick={()=>handleSearchGlassClick()}></img>
+
             {autocomplete.length>0?listAutocomplete():null}
 
             <button style={{display:'none'}} className="cuisineBtn"
@@ -187,7 +198,7 @@ export function NavigationBar(props) {
             onClick={()=>toggleFilterPanel()}>Filters</button>*/}
 
             <button className="cuisineBtn" 
-            onClick={()=>toggleFilterPanel()}>Filters</button>
+            onClick={()=>toggleFilterPanel()}> All Filters</button>
           
           </div>
           

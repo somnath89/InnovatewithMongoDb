@@ -2,9 +2,6 @@ import React,{useState,useEffect} from 'react';
 import './App.css';
 import cuisines from './cuisines';
 
-let cuisineArr = [];
-let ratingArr = [];
-let openHrsArr = [];
 
 function FilterPanel(props){
 
@@ -13,6 +10,11 @@ function FilterPanel(props){
     const [openHours,setopenHoursSelected]=useState(false);
     const [selection,setCurrentSelection]=useState("Cuisine");
     const [refresh,setRefresh]=useState(false);
+
+    let previousSelections = window.localStorage.getItem('selections');
+    
+    const [selectionItems,setSelectionItems] = useState(previousSelections != null?JSON.parse(previousSelections):
+      {cuisines:[],ratings:[],openHrs:[]});
 
     const toggleButton=(event)=>{
        setCurrentSelection(event.target.innerText);
@@ -32,35 +34,70 @@ function FilterPanel(props){
   }
   const clearSelections=()=>{
 
-  	 //setCurrentSelection("Cuisine");
-  	 cuisineArr = [];
-  	 openHrsArr = [];
-  	 ratingArr = [];
+  	 let updObj = {...selectionItems,cuisines:[],ratings:[],openHrs:[]};
+     window.localStorage.setItem('selections',JSON.stringify(updObj));
+     setSelectionItems(updObj);
   	 setRefresh(!refresh);
   }
+
   const getChosenFilters=()=>{
 	console.log("done");
-	props.showFilters(false);
-  if(cuisineArr.length > 0 || ratingArr.length>0){
-      props.search(cuisineArr,ratingArr);
-  }
+	 props.showFilters(false);
+    if(selectionItems.cuisines.length > 0 || selectionItems.ratings.length>0){
+      props.search(selectionItems.cuisines,selectionItems.ratings);
+    }
 	
   }
-  const updateSelections=(sourceArr,ev)=>{
-    if(ev.target.checked){
-    	sourceArr.push(ev.target.defaultValue);
-    }else{
-    	sourceArr = sourceArr.filter(item=>item !== ev.target.defaultValue);
+  const updateSelections=(ev)=>{
+    
+    let srcArr = [];
+    let updObj = {};
+    switch(selection){
+      case "Cuisine":
+         srcArr = selectionItems.cuisines;
+         if(ev.target.checked){
+            srcArr.push(ev.target.defaultValue);
+        }else{
+          srcArr = srcArr.filter(item=>item !== ev.target.defaultValue);
+        }
+        updObj = {...selectionItems, cuisines:srcArr};
+        setSelectionItems(updObj);
+      break;
+      case "Rating":
+        srcArr = selectionItems.ratings;
+         if(ev.target.checked){
+            srcArr.push(ev.target.defaultValue);
+        }else{
+          srcArr = srcArr.filter(item=>item !== ev.target.defaultValue);
+        }
+        updObj = {...selectionItems, ratings:srcArr};
+        setSelectionItems(updObj);
+      break;
+      case "Hours":
+        srcArr = selectionItems.openHrs;
+         if(ev.target.checked){
+            srcArr.push(ev.target.defaultValue);
+        }else{
+          srcArr = srcArr.filter(item=>item !== ev.target.defaultValue);
+        }
+        updObj = {...selectionItems, openHrs:srcArr};
+        setSelectionItems(updObj);
+      break;
+      default:
+       break;
     }
+    
+    window.localStorage.setItem('selections',JSON.stringify(updObj));
     setRefresh(!refresh);
+    
   }
   const populateChoiceContents=()=>{
     switch(selection){
      	case "Cuisine":
      	 return (<div className="cuisine_container"><ul>{cuisines.map(item=>(<li>
      	 		<input key={item} style={{height:'25px',width:'25px'}} type="checkbox" id={item} value={item}
-     	 		checked={cuisineArr.includes(item)}
-     	 		onChange={(e)=>updateSelections(cuisineArr,e)}/>
+     	 		checked={selectionItems.cuisines.includes(item)}
+     	 		onChange={(e)=>updateSelections(e)}/>
      	 		{item}
      	 	</li>))}</ul></div>);
      	break;
@@ -68,32 +105,32 @@ function FilterPanel(props){
     		return (<div><ul>
 	            <li>
 		            <input key={5} style={{height:'25px',width:'25px'}} type="checkbox" id={5} name={5} value={"A"}
-		            checked={ratingArr.includes("A")}
-		            onChange={(e)=>updateSelections(ratingArr,e)}/>
+		            checked={selectionItems.ratings.includes("A")}
+		            onChange={(e)=>updateSelections(e)}/>
 		            5.0<RatingComponent stars={5}/>
 	            </li>
 	            <li>
 		            <input key={4} style={{height:'25px',width:'25px'}} type="checkbox" id={4} name={4} value={"B"}
-		            checked={ratingArr.includes("B")}
-		            onChange={(e)=>updateSelections(ratingArr,e)}/>
+		            checked={selectionItems.ratings.includes("B")}
+		            onChange={(e)=>updateSelections(e)}/>
 		            4.0<RatingComponent stars={4}/>
 	            </li>
 	            <li>
 		            <input key={3} style={{height:'25px',width:'25px'}} type="checkbox" id={3} name={3} value={"C"}
-		            checked={ratingArr.includes("C")}
-		            onChange={(e)=>updateSelections(ratingArr,e)}/>
+		            checked={selectionItems.ratings.includes("C")}
+		            onChange={(e)=>updateSelections(e)}/>
 		            3.0<RatingComponent stars={3}/>
 	            </li>
 	            <li>
 					<input key={2} style={{height:'25px',width:'25px'}} type="checkbox" id={2} name={2} value={"P"}
-					checked={ratingArr.includes("P")}
-					onChange={(e)=>updateSelections(ratingArr,e)}/>
+					checked={selectionItems.ratings.includes("P")}
+					onChange={(e)=>updateSelections(e)}/>
 		            2<RatingComponent stars={2}/>
 	            </li>
 	            <li>
 	                 <input key={"any"} style={{height:'25px',width:'25px'}} type="checkbox" id="any" name="any" value="Not Yet Graded"
-	                 checked={ratingArr.includes("Not Yet Graded")}
-	                 onChange={(e)=>updateSelections(ratingArr,e)}/>
+	                 checked={selectionItems.ratings.includes("Not Yet Graded")}
+	                 onChange={(e)=>updateSelections(e)}/>
 		             Any Rating
 	            </li>
     		</ul></div>);
@@ -103,21 +140,21 @@ function FilterPanel(props){
     			<li>
 		            <input key={"anytime"} style={{height:'25px',width:'25px'}} type="checkbox" id="any time" name="any time" 
 		            value="any time" 
-		            checked={openHrsArr.includes("any time")}
-		            onChange={(e)=>updateSelections(openHrsArr,e)}/>
+		            checked={selectionItems.openHrs.includes("any time")}
+		            onChange={(e)=>updateSelections(e)}/>
 		            Any Time
 	            </li>
 	            <li>
 		            <input key={"open_now"} style={{height:'25px',width:'25px'}} type="checkbox" id="open now" name="open now" 
 		            value="open now" 
-		            checked={openHrsArr.includes("open now")}
-		            onChange={(e)=>updateSelections(openHrsArr,e)}/>
+		            checked={selectionItems.openHrs.includes("open now")}
+		            onChange={(e)=>updateSelections(e)}/>
 		            Open Now
 	            </li>
 	            <li>
 		            <input key={"24hrs"} style={{height:'25px',width:'25px'}} type="checkbox" id="24hrs" name="24hrs" value="24hrs"
-		            checked={openHrsArr.includes("24hrs")}
-		            onChange={(e)=>updateSelections(openHrsArr,e)}/>
+		            checked={selectionItems.openHrs.includes("24hrs")}
+		            onChange={(e)=>updateSelections(e)}/>
 		            Open 24 hours
 	            </li>
     		</ul></div>);
