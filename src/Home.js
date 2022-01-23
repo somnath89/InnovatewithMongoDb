@@ -44,12 +44,8 @@ function Home() {
       var popup = marker.bindPopup('<b>Hello world!</b><br />I am a newly popup.');
     })
   }
-  const showDirections=()=>{
-    alert('Hello');
-    window.open('http://maps.google.com/?q=37.421854,-122.084112');
-  }
-
-  const calculateRating=(gradesArr)=>{
+  
+ const calculateRating=(gradesArr)=>{
     
     const counts = {};
     let grades = gradesArr.map(item=>item.grade);
@@ -83,7 +79,7 @@ function Home() {
 
     var restaurantIcon = L.icon({
       iconUrl: process.env.PUBLIC_URL+"/images/Restro.svg",
-      iconSize:   [38, 95], 
+      iconSize:   [38, 95],
       shadowSize:   [50, 64], 
       iconAnchor:   [22, 94], 
       shadowAnchor: [4, 62],  
@@ -96,20 +92,15 @@ function Home() {
         var marker = L.marker(item.address.coord.reverse(),{icon:restaurantIcon,meta:item}).on('click',function(e) {
         setSelectedRestaurant(e.target.options.meta);
       }).addTo(mcg);
-      
+
        var LPopup = '<div class=popupcard>'+
      '<b>'+item.name+'</b>'+
-     '<img class=drivingDirections src='+process.env.PUBLIC_URL+'/images/directions.png'+'></img>'+
+     '<img class=drivingDirections coordinate='+item.address.coord+' src='+process.env.PUBLIC_URL+'/images/directions.png'+'></img>'+
      '<div>'+item.cuisine+' restaurant ('+item.borough+')</div>'+
      '<div>'+calculateRating(item.grades)+'</div>'+
      '</div>'
         
-        /*var LPopup = '<div class=popupcard>'+
-     '<b>'+item.name+'</b>'+
-     '<div>'+item.cuisine+' restaurant ('+item.borough+')</div>'+
-     '<div>Ratings - '+item.grades.length+'</div></div>'*/
-
-        var customOptions ={
+      var customOptions ={
               'maxWidth': '300',
               'width': '200',
               'className' : 'custom'
@@ -208,7 +199,6 @@ function Home() {
   }
   
   useEffect(() => {
-    //console.log('use effect ran');
     navigator.geolocation.getCurrentPosition(function(location) {
       /*console.log(location.coords.latitude);
       console.log(location.coords.longitude);
@@ -217,6 +207,25 @@ function Home() {
       setUserLocation(new L.latLng([40.673570, -73.939714]));
       });
   },[]);
+
+  const showDirections=(event)=>{
+    
+    //https://www.google.com/maps?z=15&daddr=LATITUDE,LONGITUDE
+    //https://www.google.com/maps/dir//37.421854,-122.084112/@37.421854,-122.0863007,17z
+   // window.open('http://maps.google.com/?q=37.421854,-122.084112');
+   let Destcoordinates = event.target.getAttribute("coordinate");
+    window.open('https://www.google.com/maps/dir//'+Destcoordinates+'/@'+Destcoordinates+',17z');
+  }
+
+  const addClickHandler=()=>{
+    document.querySelectorAll(".drivingDirections").forEach(box => 
+      box.addEventListener("click", (ev) => showDirections(ev))
+    )
+  }
+
+  useEffect(() => {
+    setTimeout(addClickHandler, 3000);    
+});
 
   return (
     <div>
