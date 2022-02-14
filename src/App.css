@@ -56,6 +56,43 @@
   border:1px solid #ccd6d6;
 
 }
+.carouselcard{
+  background: white;
+  border-radius: 4px;
+  display: block;
+  /*width: 250px;
+  display:flex;*/
+  border :1px solid #cccc;
+  padding: 5px;
+  margin:10px;
+  font-size: 1rem;
+  height:170px;
+}
+.halfCircle{
+  /*border-radius: 0 0 0% 100%;*/
+  border-radius: 0 0 0% 22%;
+  text-indent: 10px;
+}
+.notification{
+  position: absolute;
+    top: 8px;
+    color: white;
+    background: green;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: left;
+    text-indent: 7px;
+}
+.discount{
+  float: right;
+  top: -56px;
+  position: relative;
+  font-weight: bold;
+  color: white;
+  border: 2px solid #ccc;
+  background: blue;
+}
 .popupcard{
     /*position: absolute;
     bottom: 8%;
@@ -95,7 +132,7 @@
 .filterPanel{
     top: 0px;
     right: 0%;
-    z-index: 3000;
+    z-index: 4000;
     background: white;
     border-radius: 4px;
     height: 100vh;
@@ -143,7 +180,7 @@
   /*-webkit-column-count: 2; 
   -moz-column-count: 2; 
   column-count: 2;*/
-  max-height: 72vh;
+  max-height: 86vh;
   overflow-y: auto;
 }
 .cuisine_container>ul{
@@ -187,6 +224,45 @@ ul>li{
     left: -50px;
     top: 7px;
     cursor: pointer;
+}
+.carouselPanel{
+  bottom: -6px;
+  z-index: 3000;
+  position: absolute;
+  width:100%;
+  /*overflow-y: hidden;
+  overflow-x: scroll;*/
+}
+.trending_ribbon{
+  /*position: absolute;
+  top:136px;
+  top: 183px;
+   left: 255px; 
+  width: 100%;*/
+  background: white;
+  height: 40px;
+  font-size: medium;
+  font-weight: 700;
+  text-align: center;
+}
+.ribbonImg{
+    width: 100%;
+    height: 44px;
+    position: relative;
+    top: -4px;
+}
+.rcs_sliderBox{
+  height: 200px !important;
+  width: 95% !important;
+  background-color: transparent !important;
+}
+.airbnb{
+  display:flex;
+}
+.airbnbLink{
+  color:blue;
+  cursor:pointer;
+  margin-left: 5px;
 }
 @keyframes App-logo-spin {
   from {

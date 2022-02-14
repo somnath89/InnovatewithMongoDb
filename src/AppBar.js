@@ -19,6 +19,7 @@ import './App.css';
 
 const autocompleteAPI = 'https://ap-south-1.aws.data.mongodb-api.com/app/searchapp-qqtoi/endpoint/autocomplete';
 
+const autocompleteMultiple = 'https://ap-south-1.aws.data.mongodb-api.com/app/searchapp-qqtoi/endpoint/autocompleteMultiple';
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
@@ -99,6 +100,11 @@ export function NavigationBar(props) {
   const [filters, setFilter] = React.useState(false);
   const [autocomplete, setAutocomplete] = React.useState([]);
 
+  let subscribedLs = window.localStorage.getItem('subscribed');
+    
+  const [subscribed, setSubscribed] = React.useState(subscribedLs != null?subscribedLs:false);
+  const [notifications, setNotifications] = React.useState(5);
+
   const input = React.useRef();
   
   const keyPress=(e)=>{
@@ -119,6 +125,18 @@ export function NavigationBar(props) {
     //props.showFilters(!filters);
     props.showFilters(!filterToggled);
   }
+  const toggleSubscription=()=>{
+    if(!subscribed){
+      window.localStorage.setItem('subscribed',!subscribed);
+      setSubscribed(!subscribed);
+    }
+    if(subscribed)
+      clearNotifications();
+    
+  }
+  const clearNotifications=()=>{
+    setNotifications(0);
+  }
   const handleAutoComplete=(ev)=>{
 
     setSearchTerm(ev.target.value);
@@ -126,7 +144,7 @@ export function NavigationBar(props) {
     //autocomplete api call
 
     axios
-      .post(autocompleteAPI, {
+      .post(autocompleteMultiple, {
         query: ev.target.value
       })
       .then((response) => {
@@ -169,7 +187,7 @@ export function NavigationBar(props) {
                    input.focus();
                 }
               }}
-              placeholder="Search Restaurants"
+              placeholder="Search Restaurants/Hotels/Stores"
               classes={{
                 root: classes.inputRoot,
                 input: classes.searchInput,
@@ -187,7 +205,12 @@ export function NavigationBar(props) {
             <button style={{display:'none'}} className="cuisineBtn"
                     onClick={()=>props.searchRestaurants(searchTerm)}>Search</button>
             
-            <button className="cuisineBtn" onClick={()=>props.searchRestaurantsinBox()}>Open Now</button>
+            <button className="cuisineBtn" onClick={()=>props.searchAirBnbinBox()}>Hotels</button>
+            <button className="cuisineBtn" onClick={()=>props.searchRestaurantsinBox()}>Restaurants</button>
+            {/*<button className="cuisineBtn" onClick={()=>props.searchStoresinBox()}>Stores</button>
+            <button className="cuisineBtn" onClick={()=>props.searchRestaurantsinBox()}>Near You</button>
+            <button className="cuisineBtn" onClick={()=>props.searchRestaurantsinBox()}>Open Now</button>*/}
+            
 
             {/*<button className="cuisineBtn">Cuisine</button>
 
@@ -198,7 +221,12 @@ export function NavigationBar(props) {
             onClick={()=>toggleFilterPanel()}>Filters</button>*/}
 
             <button className="cuisineBtn" 
-            onClick={()=>toggleFilterPanel()}> All Filters</button>
+            onClick={()=>toggleFilterPanel()}> More Filters</button>
+
+            {/*<button style={{float:'right'}} className="cuisineBtn" 
+            onClick={()=>toggleSubscription()}>{subscribed?"Notifications":"Subscribe"}
+            {notifications>0?<div className='notification'>{notifications}</div>:null}
+          </button>*/}
           
           </div>
           

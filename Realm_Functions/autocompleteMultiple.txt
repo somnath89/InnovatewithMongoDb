@@ -1,0 +1,71 @@
+exports = async function(payload, response){
+   
+    
+   const postbody = EJSON.parse(payload.body.text())
+   
+   console.log("Payload--"+JSON.stringify(postbody));
+
+    // Querying a mongodb service:
+     const collection = context.services.get("mongodb-atlas").db("sample_restaurants").collection("restaurants");
+     const hotels_collection = context.services.get("mongodb-atlas").db("sample_airbnb").collection("listingsAndReviews");
+     
+     let hotel_pipeline = [
+       {
+        $search:{index:"airbnbSearchIndex",
+        "autocomplete":{
+         "query":postbody.query,
+         "path":"name",
+         "tokenOrder":"sequential",
+          'fuzzy': {
+              'maxEdits': 2,
+              'prefixLength': 3
+          }
+        }
+       }
+     },{
+       $limit:5
+     },{
+       $project:{
+          "_id":0,
+         "name":1
+        
+       }
+     }
+     ];
+     
+     let pipeline = [
+       {
+        $search:{index:"autocompleteRestaurants",
+        "autocomplete":{
+         "query":postbody.query,
+         "path":"name",
+         "tokenOrder":"sequential",
+          'fuzzy': {
+              'maxEdits': 2,
+              'prefixLength': 3
+          }
+        }
+       }
+     },{
+       $limit:5
+     },{
+       $project:{
+          "_id":0,
+         "name":1
+        
+       }
+     }
+     ];
+    
+    let restaurants = collection.aggregate(pipeline).toArray();
+    let hotels = hotels_collection.aggregate(hotel_pipeline).toArray();
+    
+    //console.log(JSON.stringify(hotels));
+    //console.log(JSON.stringify(hotels));
+    
+    response.setStatusCode(200);
+    response.setHeader("Content-Type", "application/json");
+    response.setBody(JSON.stringify(hotels.concat(restaurants)));
+    
+    return response;
+};

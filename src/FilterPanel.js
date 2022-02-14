@@ -2,6 +2,11 @@ import React,{useState,useEffect} from 'react';
 import './App.css';
 import cuisines from './cuisines';
 
+import AddIcon from '@material-ui/icons/AddCircleOutline';
+//import DoDisturbOnIcon from '@material-ui/icons/DoDisturbOn';
+
+import HorizontalRuleIcon from '@material-ui/icons/MinimizeRounded';
+import PriceSlider from './PriceSlider';
 
 function FilterPanel(props){
 
@@ -14,7 +19,7 @@ function FilterPanel(props){
     let previousSelections = window.localStorage.getItem('selections');
     
     const [selectionItems,setSelectionItems] = useState(previousSelections != null?JSON.parse(previousSelections):
-      {cuisines:[],ratings:[],openHrs:[]});
+      {cuisines:[],ratings:[],openHrs:[],amenities:[],bedrooms:"",bathrooms:"",beds:"",price_range:[]});
 
     const toggleButton=(event)=>{
        setCurrentSelection(event.target.innerText);
@@ -34,7 +39,8 @@ function FilterPanel(props){
   }
   const clearSelections=()=>{
 
-  	 let updObj = {...selectionItems,cuisines:[],ratings:[],openHrs:[]};
+  	 let updObj = {...selectionItems,cuisines:[],ratings:[],openHrs:[],amenities:[],
+		            bedrooms:"",bathrooms:"",beds:"",price_range:[]};
      window.localStorage.setItem('selections',JSON.stringify(updObj));
      setSelectionItems(updObj);
   	 setRefresh(!refresh);
@@ -42,10 +48,16 @@ function FilterPanel(props){
 
   const getChosenFilters=()=>{
 	console.log("done");
+	console.log(selectionItems);
 	 props.showFilters(false);
     if(selectionItems.cuisines.length > 0 || selectionItems.ratings.length>0){
       props.search(selectionItems.cuisines,selectionItems.ratings);
     }
+	//if(selectionItems.bathrooms.length > 0 || selectionItems.ratings.length>0){
+	props.searchHotels(selectionItems.bedrooms,selectionItems.beds,
+		               selectionItems.amenities,
+					   selectionItems.bathrooms,selectionItems.price_range);
+	 // }
 	
   }
   const updateSelections=(ev)=>{
@@ -53,7 +65,26 @@ function FilterPanel(props){
     let srcArr = [];
     let updObj = {};
     switch(selection){
-      case "Cuisine":
+        case "Rooms/Beds":
+		let option = ev.target.id;	
+		switch(option){
+			case "bathrooms":
+			updObj = {...selectionItems, bathrooms:ev.target.value};
+            setSelectionItems(updObj);
+			break;
+			case "bedrooms":
+			updObj = {...selectionItems, bedrooms:ev.target.value};
+        	setSelectionItems(updObj);
+			break;
+			case "beds":
+			updObj = {...selectionItems, beds:ev.target.value};
+        	setSelectionItems(updObj);
+		    break;
+			default:
+				break;
+		}
+		break;
+		case "Cuisine":
          srcArr = selectionItems.cuisines;
          if(ev.target.checked){
             srcArr.push(ev.target.defaultValue);
@@ -83,6 +114,26 @@ function FilterPanel(props){
         updObj = {...selectionItems, openHrs:srcArr};
         setSelectionItems(updObj);
       break;
+      case "Amenities":
+        srcArr = selectionItems.amenities;
+         if(ev.target.checked){
+            srcArr.push(ev.target.defaultValue);
+        }else{
+          srcArr = srcArr.filter(item=>item !== ev.target.defaultValue);
+        }
+        updObj = {...selectionItems, amenities:srcArr};
+        setSelectionItems(updObj);
+      break;
+     case "Price Range":
+        /*srcArr = selectionItems.price_range;
+         if(ev.target.checked){
+            srcArr.push(ev.target.defaultValue);
+        }else{
+          srcArr = srcArr.filter(item=>item !== ev.target.defaultValue);
+        }*/
+        updObj = {...selectionItems, price_range:ev.values[0]};
+        setSelectionItems(updObj);
+        break;
       default:
        break;
     }
@@ -159,6 +210,80 @@ function FilterPanel(props){
 	            </li>
     		</ul></div>);
     	break;
+      case "Rooms/Beds":
+    		return (<div><ul>
+    			<li style={{display:'flex'}}>
+		            <input key={"Beds"} style={{height:'25px',width:'25px'}} type="checkbox"
+		            value="beds"/>
+		            Beds
+					<div style={{display:'flex',marginLeft:'138px'}}>
+					<HorizontalRuleIcon/>
+					<input style={{height:'25px',width:'25px', border:'1px solid #ccc',textAlign:'center'}} type="text" id="beds"
+		            onChange={(ev)=>updateSelections(ev)}/>
+					<AddIcon/>
+					</div>
+				</li>
+	            <li style={{display:'flex'}}>
+		            <input key={"Bedrooms"} style={{height:'25px',width:'25px'}} type="checkbox"
+		            value="Bedrooms"/>
+		            Bedrooms
+					<div style={{display:'flex',marginLeft:'100px'}}>
+					<HorizontalRuleIcon/>
+					<input style={{height:'25px',width:'25px', border:'1px solid #ccc',textAlign:'center'}} type="text" id="bedrooms"
+		            onChange={(ev)=>updateSelections(ev)}/>
+					<AddIcon/>
+					</div>
+	            </li>
+	            <li style={{display:'flex'}}>
+		            <input key={"Bathrooms"} style={{height:'25px',width:'25px'}} type="checkbox"
+                	value="Bathrooms"/>
+		            Bathrooms
+					<div style={{display:'flex',marginLeft:'95px'}}>
+					<HorizontalRuleIcon/>
+					<input style={{height:'25px',width:'25px', border:'1px solid #ccc',textAlign:'center'}} type="text" id="bathrooms"
+		            onChange={(ev)=>updateSelections(ev)}/>
+					<AddIcon/>
+					</div>
+	            </li>
+    		</ul></div>);
+    	break;
+      case "Amenities":
+    		return (<div><ul>
+    			<li>
+		            <input key={"kitchen"} style={{height:'25px',width:'25px'}} type="checkbox" id="kitchen" name="kitchen" 
+		            value="Kitchen" 
+		            checked={selectionItems.amenities.includes("Kitchen")}
+		            onChange={(e)=>updateSelections(e)}/>
+		            Kitchen
+	            </li>
+	            <li>
+		            <input key={"heating"} style={{height:'25px',width:'25px'}} type="checkbox" id="heating" name="heating" 
+		            value="Heating" 
+		            checked={selectionItems.amenities.includes("Heating")}
+		            onChange={(e)=>updateSelections(e)}/>
+		            Heating
+	            </li>
+	            <li>
+		            <input key={"wifi"} style={{height:'25px',width:'25px'}} type="checkbox" id="wifi" name="wifi" 
+					value="Wifi"
+		            checked={selectionItems.amenities.includes("Wifi")}
+		            onChange={(e)=>updateSelections(e)}/>
+		            Wifi
+	            </li>
+              <li>
+		            <input key={"washing_machine"} style={{height:'25px',width:'25px'}} type="checkbox" id="washing_machine" 
+                	name="washing_machine" value="Washer"
+		            checked={selectionItems.amenities.includes("Washer")}
+		            onChange={(e)=>updateSelections(e)}/>
+		            Washing Machine
+	            </li>
+    		</ul></div>);
+    	break;
+		case "Price Range":
+			return (<div>
+				<PriceSlider updateSelections={updateSelections}/>
+			</div>);
+		break;
      	default:
      	 return "Choose a selection";
      	break;
@@ -169,7 +294,10 @@ function FilterPanel(props){
      <button className={selection=='Cuisine'?"filterBtnSelected":"filterBtn"} onClick={(e)=>toggleButton(e)}>Cuisine</button>
 	 <button className={selection=='Rating'?"filterBtnSelected":"filterBtn"} onClick={(e)=>toggleButton(e)}>Rating</button>
      <button className={selection=='Hours'?"filterBtnSelected":"filterBtn"} onClick={(e)=>toggleButton(e)}>Hours</button>
-     {populateChoiceContents()}
+     <button className={selection=='Rooms/Beds'?"filterBtnSelected":"filterBtn"} onClick={(e)=>toggleButton(e)}>Rooms/Beds</button>
+     <button className={selection=='Amenities'?"filterBtnSelected":"filterBtn"} onClick={(e)=>toggleButton(e)}>Amenities</button>
+     <button className={selection=='Price Range'?"filterBtnSelected":"filterBtn"} onClick={(e)=>toggleButton(e)}>Price Range</button>
+	 {populateChoiceContents()}
      <div className="footer">
      <button className="cuisineBtn" onClick={(e)=>clearSelections()}>Clear</button>
      <button className="cuisineBtn" onClick={()=>getChosenFilters()}>Done</button>
